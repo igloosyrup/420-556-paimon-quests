@@ -1,2 +1,8 @@
-package com.igloosyrup.paimonquests.repositories;public class UserRepository {
+package com.igloosyrup.paimonquests.repositories;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+
+@Repository
+public interface UserRepository extends JpaRepository {
 }
