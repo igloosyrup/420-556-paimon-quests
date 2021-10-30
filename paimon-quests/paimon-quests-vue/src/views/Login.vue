@@ -1,6 +1,6 @@
 <template>
-    <div>
-
+    <div class="my-5">
+        <h2 class="text-dark">Se connecter</h2>
     </div>
 </template>
 
