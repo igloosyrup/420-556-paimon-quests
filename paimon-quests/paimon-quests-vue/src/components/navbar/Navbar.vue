@@ -2,15 +2,21 @@
     <!--  
         <router-link to="/">Home</router-link> |
         <router-link to="/about">About</router-link> |
-        <router-link to="/paimon">Paimon</router-link>
+        
     Image and text -->
-    <nav class="navbar navbar-light sticky-top bg-light align-middle">
+    <nav class="navbar navbar-light sticky-top bg-dark align-middle justify-content-start">
         <router-link to="/">
             <a class="navbar-brand">
-                <img class="d-inline-block align-middle flip-img ml-1" draggable="false" :src="require(`@/assets/paimon/${LOGO_SOURCE}`)" width="85" height="85" alt="">
-                <span class="ml-2 align-middle display-4">{{TITLE}}</span>
+                <img class="align-middle flip-img ml-1" draggable="false" :src="require(`@/assets/paimon/${LOGO_SOURCE}`)" width="85" height="85" alt="">
             </a>
         </router-link>
+        <router-link to="/">
+            <a class="navbar-brand mt-4">
+                <h1 class="ml-2 align-middle text-light">{{TITLE}}</h1>
+            </a>
+        </router-link>
+        
+        <router-link to="/paimon">Paimon</router-link>
     </nav>
 </template>
 
