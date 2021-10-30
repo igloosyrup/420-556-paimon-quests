@@ -1,7 +1,7 @@
 <template>
     <footer class="py-4 charcoal-bg">
         <div class="text-center mb-4">
-            <h1 class="text-white display-5">Mes contacts</h1>
+            <h1 class="text-white display-4">Mes contacts</h1>
         </div>
         <div class="text-center">
             <a :href="`${GITHUB}`" target="_blank" class="mx-4"><i class="fab fa-github text-light fa-3x"></i></a>
