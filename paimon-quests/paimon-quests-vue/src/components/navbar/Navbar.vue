@@ -55,11 +55,6 @@
 </script>
 
 <style scoped>
-    .flip-img{
-        -webkit-transform: scaleX(-1);
-        transform: scaleX(-1);
-    }
-
     img{
         -webkit-user-select: none;
         user-select: none;
