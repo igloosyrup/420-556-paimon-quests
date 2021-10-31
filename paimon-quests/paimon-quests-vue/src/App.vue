@@ -1,7 +1,7 @@
 <template>
   <div id="app" class="">
     <Navbar />
-    <router-view/>
+    <router-view />
     <Footer />
   </div>
 </template>
@@ -16,7 +16,6 @@ import Footer from '@/components/footer/Footer'
       Footer
   }
 }
-
 
 </script>
 
