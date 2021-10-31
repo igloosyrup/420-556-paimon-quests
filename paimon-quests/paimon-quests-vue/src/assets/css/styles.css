@@ -1,3 +1,22 @@
 .charcoal-bg{
     background-color: #252525;
 }
+
+.form-bg{
+    background-image: url('../form/scroll-form-background.png');
+    background-repeat: no-repeat;
+    background-position: top;
+    background-size: 100% 100%;
+}
+
+.paimon-bg{
+    background-image: url('../background.png');
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
+}
+
+.flip-img{
+    -webkit-transform: scaleX(-1);
+    transform: scaleX(-1);
+}
