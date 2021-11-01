@@ -1,11 +1,20 @@
 package com.igloosyrup.paimonquests.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
 @Data
 @Entity
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class User {
     @Transient
     private final int USERNAME_LENGTH = 20;
