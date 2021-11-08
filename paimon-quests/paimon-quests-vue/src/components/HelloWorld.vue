@@ -8,8 +8,6 @@
 </template>
 
 <script>
-
-
 export default {
   name: 'HelloWorld',
   props: {
@@ -17,7 +15,7 @@ export default {
   },
   data: function() {
     return{
-      message: 'Hello Vue.js!'
+      message: this.msg,
     }
   },
   methods:{
@@ -26,7 +24,8 @@ export default {
     }
   },
   components:{
-  }
+  },
+  
 }
 </script>
 
