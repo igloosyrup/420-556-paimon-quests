@@ -6,6 +6,10 @@ import PaimonHome from '@/views/PaimonHome'
 import Login from '@/views/Login'
 import Register from '@/views/Register'
 import Error404 from '@/components/Error404'
+import User from '@/views/User'
+import Admin from '@/views/Admin'
+
+
 Vue.use(VueRouter)
 
 const routes = [
@@ -15,6 +19,8 @@ const routes = [
   { path: '/paimon',  name: 'Paimon', component: PaimonHome },
   { path: '/login',  name: 'Login', component: Login },
   { path: '/register',  name: 'Register', component: Register },
+  { path: '/user',  name: 'User', component: User },
+  { path: '/admin',  name: 'Admin', component: Admin },
   { path: '/:catchAll(.*)', name: 'Error404', component: Error404 }
 ]
 
