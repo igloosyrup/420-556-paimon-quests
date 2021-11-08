@@ -7,15 +7,17 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.io.Serializable;
+import java.time.LocalDate;
 
 @Data
 @Entity
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class User {
+public class User implements Serializable {
+
     @Transient
     private final int USERNAME_LENGTH = 20;
     @Transient
@@ -28,4 +30,8 @@ public class User {
     private String password;
     @Column(unique = true, length = EMAIL_LENGTH)
     private String email;
+    private String firstName;
+    private String lastName;
+    private LocalDate birthDate;
+
 }
