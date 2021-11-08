@@ -42,7 +42,8 @@ import axios from 'axios';
         name: "SignIn",
         created(){
             this.PAIMON = 'proud-paimon.png'
-        }, data(){
+        }, 
+        data(){
             return{
                 userName: "",
                 password: ""
@@ -55,6 +56,7 @@ import axios from 'axios';
             },
             loginSuccess(){
                 this.clearForm()
+                // this.$store.setUser()
                 alert("Connexion avec succès!")
             },
             loginUser(){

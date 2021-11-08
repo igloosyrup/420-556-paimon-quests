@@ -16,11 +16,11 @@ const routes = [
   { path: '/', name: 'Home', component: Home },
   { path: '/home', component: Home },
   { path: '/about', name: 'About', component: About },
-  { path: '/paimon',  name: 'Paimon', component: PaimonHome },
-  { path: '/login',  name: 'Login', component: Login },
-  { path: '/register',  name: 'Register', component: Register },
-  { path: '/user',  name: 'User', component: User },
-  { path: '/admin',  name: 'Admin', component: Admin },
+  { path: '/paimon', name: 'Paimon', component: PaimonHome },
+  { path: '/login', name: 'Login', component: Login },
+  { path: '/register', name: 'Register', component: Register },
+  { path: '/user', name: 'User', component: User },
+  { path: '/admin', name: 'Admin', component: Admin },
   { path: '/:catchAll(.*)', name: 'Error404', component: Error404 }
 ]
 
@@ -28,5 +28,11 @@ const router = new VueRouter({
   mode: "history",
   routes
 })
+
+// router.beforeEach((to, from, next) => {
+//   if (to.name !== 'Login' && !isAuthenticated) next({ name: 'Login' })
+//   else
+//     next()
+// })
 
 export default router
