@@ -32,6 +32,6 @@ public class User implements Serializable {
     private String email;
     private String firstName;
     private String lastName;
-    private LocalDate birthDate;
+    private String birthDate;
 
 }
