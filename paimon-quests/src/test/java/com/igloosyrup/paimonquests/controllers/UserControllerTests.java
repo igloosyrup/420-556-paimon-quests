@@ -2,7 +2,9 @@ package com.igloosyrup.paimonquests.controllers;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.igloosyrup.paimonquests.enums.PasswordEnum;
 import com.igloosyrup.paimonquests.models.User;
+import com.igloosyrup.paimonquests.services.PasswordService;
 import com.igloosyrup.paimonquests.services.UserService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -13,6 +15,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -30,32 +33,49 @@ public class UserControllerTests {
     @MockBean
     private UserService userService;
 
+    private PasswordService passwordService;
+
+    private User rawUser;
     private User user;
     private User invalidUser;
+    private String rawPassword;
+    private String encodedPassword;
 
     @BeforeEach
     public void setup() {
+        passwordService = new PasswordService(PasswordEnum.PBKDF2.getStringValue());
+        rawPassword = "toto";
+        encodedPassword = passwordService.encodePassword(rawPassword);
+
+        rawUser = User.builder()
+                .idUser(1)
+                .userName("toto")
+                .password(rawPassword)
+                .email("toto@toto.toto")
+                .build();
+
         user = User.builder()
                 .idUser(1)
                 .userName("toto")
-                .password("toto")
+                .password(encodedPassword)
                 .email("toto@toto.toto")
                 .build();
+
         invalidUser = User.builder()
                 .idUser(2)
                 .userName("toto")
-                .password("toto")
+                .password(encodedPassword)
                 .email("toto@toto.toto")
                 .build();
     }
 
     @Test
     public void testRegisterUser() throws Exception {
-        when(userService.registerUser(user)).thenReturn(Optional.of(user));
+        when(userService.registerUser(rawUser)).thenReturn(Optional.of(user));
 
         MvcResult result = mockMvc.perform(post("/user/register")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(new ObjectMapper().writeValueAsString(user))).andReturn();
+                .content(new ObjectMapper().writeValueAsString(rawUser))).andReturn();
 
         var actualUser = new ObjectMapper().readValue(result.getResponse()
                 .getContentAsString(), new TypeReference<User>() {
@@ -79,9 +99,9 @@ public class UserControllerTests {
 
     @Test
     public void testLoginUser() throws Exception {
-        when(userService.loginUser(user.getUserName(), user.getPassword())).thenReturn(Optional.of(user));
+        when(userService.loginUser(user.getUserName(), rawPassword)).thenReturn(Optional.of(user));
 
-        MvcResult result = mockMvc.perform(get("/user/login/" + user.getUserName() + "/" + user.getPassword())
+        MvcResult result = mockMvc.perform(get("/user/login/" + user.getUserName() + "/" + rawPassword)
                 .contentType(MediaType.APPLICATION_JSON)).andReturn();
 
         var actualUser = new ObjectMapper().readValue(

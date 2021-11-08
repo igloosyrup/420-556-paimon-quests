@@ -1,5 +1,6 @@
 package com.igloosyrup.paimonquests.services;
 
+import com.igloosyrup.paimonquests.enums.PasswordEnum;
 import com.igloosyrup.paimonquests.models.User;
 import com.igloosyrup.paimonquests.repositories.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -9,7 +10,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import static org.mockito.Mockito.when;
 import org.mockito.junit.jupiter.MockitoExtension;
-
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -23,21 +23,29 @@ public class UserServiceTests {
     @InjectMocks
     private UserService userService;
 
+    private PasswordService passwordService;
+
     private User user;
     private User invalidUser;
+    private String rawPassword;
+    private String encodedPassword;
 
     @BeforeEach
     public void setup(){
+        passwordService = new PasswordService(PasswordEnum.PBKDF2.getStringValue());
+        rawPassword = "toto";
+        encodedPassword = passwordService.encodePassword(rawPassword);
+
         user = User.builder()
                 .idUser(1)
                 .userName("toto")
-                .password("toto")
+                .password(encodedPassword)
                 .email("toto@toto.toto")
                 .build();
         invalidUser = User.builder()
                 .idUser(2)
                 .userName("toto")
-                .password("toto")
+                .password(encodedPassword)
                 .email("toto@toto.toto")
                 .build();
     }
@@ -59,16 +67,17 @@ public class UserServiceTests {
 
     @Test
     public void testLoginUser(){
-        when(userRepository.findUserByUserNameAndPassword(user.getUserName(), user.getPassword())).thenReturn(user);
-        Optional<User> actualUser = userService.loginUser(user.getUserName(), user.getPassword());
+        when(userRepository.findUserByUserName(user.getUserName())).thenReturn(user);
+        Optional<User> actualUser = userService.loginUser(user.getUserName(), rawPassword);
         assertThat(actualUser.get()).isEqualTo(user);
         assertThat(actualUser.get().getIdUser()).isEqualTo(user.getIdUser());
     }
 
     @Test
     public void testLoginUserFails(){
-        when(userRepository.findUserByUserNameAndPassword(null, null)).thenReturn(null);
+        when(userRepository.findUserByUserName(null)).thenReturn(null);
         Optional<User> actualUser = userService.loginUser(null, null);
         assertThat(actualUser).isEmpty();
     }
+
 }
