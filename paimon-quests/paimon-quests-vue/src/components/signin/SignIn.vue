@@ -1,29 +1,37 @@
 <template>
-    <div class="container mt-5 pb-5 px-5">
+    <div class="container mb-5 mt-5 pb-5 px-5">
         <div class="py-5 mt-5 mx-5">
             <div class="d-flex justify-content-center">
                 <div class="form mt-5">
-                    <img :src="require(`@/assets/paimon/${PAIMON}`)" draggable="false" class="rounded-pill paimon mt-5" alt="">
+                    <img :src="require(`@/assets/paimon/${PAIMON}`)" draggable="false" class="rounded-pill paimon mt-5">
                     <h1 class="text-dark mx-4 py-5 display-4">
-                        Se connecter
+                        Connectez-vous
                     </h1>
+                    
                 </div>
             </div>
-            <form class="mb-5" @submit="loginUser">
-                <div class="d-flex justify-content-center">
-                    <div class="form-group">
-                        <div class="mt-3">
-                            <label for="username">Nom d'utilisateur</label>
-                            <input type="text" v-model="userName" class="form-control" id="username" placeholder="Votre nom d'utilisateur">
-                        </div>
-                        <div class="mt-3">
-                            <label for="password">Mot de passe</label>
-                            <input type="password" v-model="password" class="form-control" id="password" placeholder="Votre mot de passe">
+            <div class="d-flex justify-content-center">
+                <form class="mb-3" @submit.prevent="loginUser">
+                    <div class="d-flex justify-content-center">
+                        <div class="form-group">
+                            <div class="mt-3">
+                                <label for="username">Nom d'utilisateur</label>
+                                <input type="text" v-model="userName" class="form-control" id="username" placeholder="Votre nom d'utilisateur">
+                            </div>
+                            <div class="mt-3">
+                                <label for="password">Mot de passe</label>
+                                <input type="password" v-model="password" class="form-control" id="password" placeholder="Votre mot de passe">
+                            </div>
+                            <div class="mt-3">
+                                <button type="submit" class="form-control btn btn-dark mt-3">Se connecter</button>
+                            </div>
                         </div>
                     </div>
-                </div>
-                <button type="submit" class="btn btn-primary mt-5">Se connecter</button>
-            </form>
+                </form>
+            </div>
+            <div>
+            <a href="#" class="text-dark">Mot de passe oublié?</a>
+            </div>
         </div>
     </div>
 </template>
@@ -32,14 +40,13 @@
 import axios from 'axios';
     export default {
         name: "SignIn",
-        data(){
+        created(){
+            this.PAIMON = 'proud-paimon.png'
+        }, data(){
             return{
                 userName: "",
                 password: ""
             }
-        },
-        created(){
-            this.PAIMON = 'Paimon-Treasure.png'
         },
         methods:{
             clearForm(){
@@ -50,8 +57,7 @@ import axios from 'axios';
                 this.clearForm()
                 alert("Connexion avec succès!")
             },
-            loginUser(e){
-                e.preventDefault();
+            loginUser(){
                 axios.get(`http://localhost:9696/user/login/${this.userName}/${this.password}`)
                     .then(res => res.data.userName == this.userName ? this.loginSuccess() : alert("Connexion échouée"))
             }
