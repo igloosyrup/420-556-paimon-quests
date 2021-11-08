@@ -1,5 +1,6 @@
 package com.igloosyrup.paimonquests.services;
 
+import com.igloosyrup.paimonquests.enums.PasswordEnum;
 import com.igloosyrup.paimonquests.models.User;
 import com.igloosyrup.paimonquests.repositories.UserRepository;
 import org.springframework.stereotype.Service;
@@ -11,12 +12,16 @@ public class UserService {
 
     public UserRepository userRepository;
 
+    private PasswordService passwordService;
+
     public UserService(UserRepository userRepository) {
         this.userRepository = userRepository;
+        this.passwordService = new PasswordService(PasswordEnum.PBKDF2.getStringValue());
     }
 
     public Optional<User> registerUser(User user) {
         try {
+            user.setPassword(passwordService.encodePassword(user.getPassword()));
             return Optional.of(userRepository.save(user));
         } catch (Exception e) {
             return Optional.empty();
@@ -25,9 +30,12 @@ public class UserService {
 
     public Optional<User> loginUser(String userName, String password) {
         try {
-            return Optional.of(userRepository.findUserByUserNameAndPassword(userName, password));
+            User user = userRepository.findUserByUserName(userName);
+            return passwordService.matchPassword(password, user.getPassword()) ? Optional.of(user) : Optional.empty();
         } catch (Exception e) {
             return Optional.empty();
         }
     }
+
+
 }
