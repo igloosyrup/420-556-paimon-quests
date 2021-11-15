@@ -1,45 +1,40 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
-import axios from 'axios'
+import createPersistedState from "vuex-persistedstate"
 
 Vue.use(Vuex)
 
-const userUrl = "http://localhost:9696/user/",
-const headers = { 'Content-Type' : 'application/json'}
+const LOGIN = "mutateLogin"
+const LOGOUT = "mutateLogout"
 
-export const store = new Vuex.Store({
+const store = new Vuex.Store({
         state: {
-            user: {
-                username: undefined,
-                password: undefined,
-                email: undefined,
-                firstName: undefined,
-                lastName: undefined,
-                birthdate: undefined
-            }
+            user: undefined
         },
         mutations: {
-            logout(state){
-                state.user = undefined
+            mutateLogin(state, payload){
+                state.user = payload.data
+                console.log(state.user)
             },
-            loginUser(state, payload){
-                state.user = payload
+            mutateLogout(state){
+                state.user = undefined
             }
         },
         actions:{
-            async loginUser(state){
-                axios.get(`${userUrl}/login/${state.userName}/${state.password}`)
-                .then(res => res.data.userName == state.userName ? 
-                    state.user = res.data : state.user = undefined)
-
-                // const result = await fetch(`${userUrl}login/${state.user.username}/${state.user.password}`, { headers })
-                // const userFromServer = await result.json()
-                // state.commit("loginUser", userFromServer.user)
+            loginUser(state, payload){
+                state.commit(LOGIN, payload)
             },
-
+            logout(state){
+                state.commit(LOGOUT)
+                console.log(state.user)
+            }
+            
         },
         getters:{
-            getCurrentUser: state => state.user
+            currentUser: state => state.user
         },
+        plugins: [createPersistedState()]
     }
 )
+
+export default store
