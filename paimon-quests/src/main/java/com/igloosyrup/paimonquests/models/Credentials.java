@@ -7,8 +7,8 @@ import lombok.Data;
 @Data
 @AllArgsConstructor
 @Builder
-public class UserCredentials {
+public class Credentials {
 
-    private String username;
+    private String userName;
     private String password;
 }
