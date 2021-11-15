@@ -1,6 +1,7 @@
 package com.igloosyrup.paimonquests.services;
 
 import com.igloosyrup.paimonquests.enums.PasswordEnum;
+import com.igloosyrup.paimonquests.models.Credentials;
 import com.igloosyrup.paimonquests.models.User;
 import com.igloosyrup.paimonquests.repositories.UserRepository;
 import org.springframework.stereotype.Service;
@@ -28,14 +29,15 @@ public class UserService {
         }
     }
 
-    public Optional<User> loginUser(String userName, String password) {
+    public Optional<User> loginUser(Credentials credentials) {
         try {
-            User user = userRepository.findUserByUserName(userName);
+            String username = credentials.getUserName();
+            String password = credentials.getPassword();
+            User user = userRepository.findUserByUserName(username);
+            System.out.println(passwordService.matchPassword(password, user.getPassword()));
             return passwordService.matchPassword(password, user.getPassword()) ? Optional.of(user) : Optional.empty();
         } catch (Exception e) {
             return Optional.empty();
         }
     }
-
-
 }
