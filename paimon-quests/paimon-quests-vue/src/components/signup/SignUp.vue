@@ -13,11 +13,11 @@
                 <form class="mx-5" @submit.prevent="registerUser">
                     <div class="d-flex justify-content-center">
                         <div class="form-group">
-                            <div class="form-group mt-3" :class="{ 'form-group--error': $v.username.$error }">
-                                <label for="username">Nom d'utilisateur</label>
-                                <input type="text" class="form-control" id="username" v-model="$v.username.$model" placeholder="Votre nom d'utilisateur">
-                                <div class="text-danger font-weight-bold" v-if="!$v.username.required && $v.username.$dirty">Le nom d'utilisateur est obligatoire</div>
-                                <div class="text-danger font-weight-bold" v-if="!$v.username.usernameValid">Le nom d'utilisateur doit avoir au moins {{$v.username.$params.minLength.min}} caractères.</div>
+                            <div class="form-group mt-3" :class="{ 'form-group--error': $v.userName.$error }">
+                                <label for="userName">Nom d'utilisateur</label>
+                                <input type="text" class="form-control" id="userName" v-model="$v.userName.$model" placeholder="Votre nom d'utilisateur">
+                                <div class="text-danger font-weight-bold" v-if="!$v.userName.required && $v.userName.$dirty">Le nom d'utilisateur est obligatoire</div>
+                                <div class="text-danger font-weight-bold" v-if="!$v.userName.usernameValid">Le nom d'utilisateur doit avoir au moins {{$v.userName.$params.minLength.min}} caractères.</div>
                             </div>
                             <div class="form-group mt-3" :class="{ 'form-group--error': $v.email.$error }">
                                 <label for="email">Adresse Courriel</label>
@@ -43,17 +43,16 @@
 </template>
 
 <script>
-import axios from 'axios';
+import axios from 'axios'
 import { required, minLength, email, helpers } from 'vuelidate/lib/validators'
 import { Patterns } from '@/constants/patterns.js'
     const passwordValid = helpers.regex("passwordValid", Patterns.passwordPattern())
     const usernameValid = helpers.regex("usernameValid", Patterns.usernamePattern())
-
     export default {
         name: "SignUp",
         data(){
             return{
-                username: "",
+                userName: "",
                 password: "",
                 email: "",
                 submitStatus: null,
@@ -63,7 +62,7 @@ import { Patterns } from '@/constants/patterns.js'
             this.PAIMON = 'nice-paimon.png'
         },
         validations:{
-            username:{
+            userName:{
                 required,
                 minLength: minLength(8),
                 usernameValid
@@ -81,7 +80,7 @@ import { Patterns } from '@/constants/patterns.js'
         },
         methods:{
             clearForm(){
-                this.username = ''
+                this.userName = ''
                 this.password = ''
                 this.email = ''
                 this.$v.$reset()
@@ -96,9 +95,10 @@ import { Patterns } from '@/constants/patterns.js'
                 if (this.$v.$invalid){
                     alert("Veuillez remplir tous les champs correctement")
                 }else{
-                    const user = { username : this.username, password : this.password, email : this.email}
+                    const user = { userName : this.userName, password : this.password, email : this.email}
+                    console.log(user)
                     axios.post('http://localhost:9696/user/register', user)
-                        .then(res => res.data.username == this.username ? this.registerSuccess() : alert("Insciption échouée"))
+                        .then(res => res.data.userName == user.userName ? this.registerSuccess() : alert(res.data))
                         .catch(err => console.log(err))
                 }
             }
