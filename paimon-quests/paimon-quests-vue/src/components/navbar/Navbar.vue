@@ -1,9 +1,4 @@
 <template>
-    <!--  
-        <router-link to="/">Home</router-link> |
-        <router-link to="/about">About</router-link> |
-        
-    Image and text -->
     <nav class="navbar navbar-light sticky-top bg-dark align-middle">
         <div class="row justify-content-start">
             <div class="">
@@ -21,10 +16,7 @@
                 </router-link>
             </div>
         </div>
-        <!-- <router-link to="/paimon">
-            Paimon
-        </router-link> -->
-        <div class="row justify-content-end">
+        <div class="row justify-content-end" v-if="this.getCurrentUser == undefined">
             <div class="mt-4">
                 <router-link to="/login">
                     <a class="text-light mx-2 mt-5">
@@ -40,17 +32,67 @@
                 </router-link>
             </div>
         </div>
+        <div class="row justify-content-end" v-if="this.getCurrentUser != undefined && this.getCurrentUser != ''">
+            <div class="mt-4 mx-2">
+                <router-link to="/user">
+                    <a href="#" class="text-light">Mon profil</a>
+                </router-link>
+            </div>
+            <a class="text-light mt-4 mx-2" @click="logout()">
+                Se déconnecter
+            </a>
+        </div>
     </nav>
 </template>
 
 <script>
     export default {
         name: "Navbar",
-        created() {
-            this.LOGO_SOURCE = 'hi-paimon.png';
-            this.UN_TEST = "he;lo";
-            this.TITLE = "Paimon Quest"
+        methods:{
+            logout(){
+                this.$swal.fire({
+                    title: "Déconnexion",
+                    text: "Voulez-vous vraiment vous déconnecter?",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    focusConfirm: false,
+                    confirmButtonText:'Oui',
+                    cancelButtonText:'Non'
+                }).then((result) => {
+                    if(result.isConfirmed)
+                        this.$store.dispatch("logout")
+                        this.swal("Bravo", "déconnexion avec succès!", "success")
+                        if(this.$route.path === "/")
+                            return
+                        this.$router.push({ name: "Home"})
+                })
+            }, 
+            swal(alertTitle, alertText, alertIcon){
+                this.$swal.fire({
+                    title: alertTitle,
+                    text: alertText,
+                    icon: alertIcon
+                })
+            },
+
         },
+        data(){
+            return{
+                user: "",
+            }
+        },
+        created() {
+            this.LOGO_SOURCE = 'hi-paimon.png'
+            this.UN_TEST = "hello"
+            this.TITLE = "Paimon Quest"
+            this.user = this.getCurrentUser
+            
+        },
+        computed:{
+            getCurrentUser(){
+                return this.$store.getters.currentUser
+            }
+        }
     }
 </script>
 
