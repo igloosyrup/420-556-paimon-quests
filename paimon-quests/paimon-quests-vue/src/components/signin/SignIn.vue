@@ -7,7 +7,11 @@
                     <h1 class="text-dark mx-4 py-5 display-4">
                         Connectez-vous
                     </h1>
-                    
+                    <!-- To remove this later -->
+                    <span >
+                        {{this.$store.state.user}}
+                    </span>
+                    <!-- end of to remove later -->
                 </div>
             </div>
             <div class="d-flex justify-content-center">
@@ -15,8 +19,8 @@
                     <div class="d-flex justify-content-center">
                         <div class="form-group">
                             <div class="mt-3">
-                                <label for="username">Nom d'utilisateur</label>
-                                <input type="text" v-model="userName" class="form-control" id="username" placeholder="Votre nom d'utilisateur">
+                                <label for="userName">Nom d'utilisateur</label>
+                                <input type="text" v-model="userName" class="form-control" id="userName" placeholder="Votre nom d'utilisateur">
                             </div>
                             <div class="mt-3">
                                 <label for="password">Mot de passe</label>
@@ -37,7 +41,7 @@
 </template>
 
 <script>
-import axios from 'axios';
+import axios from 'axios'
     export default {
         name: "SignIn",
         created(){
@@ -54,14 +58,20 @@ import axios from 'axios';
                 this.userName = ''
                 this.password = ''
             },
-            loginSuccess(){
+            loginSuccess(user){
                 this.clearForm()
-                // this.$store.setUser()
-                alert("Connexion avec succès!")
+                this.$store.dispatch("loginUser", user)
+                this.$swal.fire({
+                    title:"Connexion avec succès!",
+                    icon:"success"})
             },
             loginUser(){
-                axios.get(`http://localhost:9696/user/login/${this.userName}/${this.password}`)
-                    .then(res => res.data.userName == this.userName ? this.loginSuccess() : alert("Connexion échouée"))
+                const credentials = {
+                    userName : this.userName,
+                    password : this.password
+                }
+                axios.post('http://localhost:9696/user/login/', credentials)
+                    .then(res => res.data.userName == this.userName ? this.loginSuccess(res) : alert("Connexion échouée"))
             }
         }
     }
@@ -69,8 +79,7 @@ import axios from 'axios';
 
 <style scoped>
     input{
-            /* background-color: rgba(255,255,255, 0.0); */
-            border: 0px;
+        border: 0px;
     }
     .paimon{
         width: 197.5px;
