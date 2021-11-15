@@ -3,6 +3,7 @@ package com.igloosyrup.paimonquests.controllers;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.igloosyrup.paimonquests.enums.PasswordEnum;
+import com.igloosyrup.paimonquests.models.Credentials;
 import com.igloosyrup.paimonquests.models.User;
 import com.igloosyrup.paimonquests.services.PasswordService;
 import com.igloosyrup.paimonquests.services.UserService;
@@ -35,6 +36,7 @@ public class UserControllerTests {
 
     private PasswordService passwordService;
 
+    private Credentials credentials;
     private User rawUser;
     private User user;
     private User invalidUser;
@@ -46,6 +48,10 @@ public class UserControllerTests {
         passwordService = new PasswordService(PasswordEnum.PBKDF2.getStringValue());
         rawPassword = "toto";
         encodedPassword = passwordService.encodePassword(rawPassword);
+        credentials = Credentials.builder()
+                .userName("toto")
+                .password(rawPassword)
+                .build();
 
         rawUser = User.builder()
                 .idUser(1)
@@ -98,28 +104,30 @@ public class UserControllerTests {
     }
 
     @Test
-    public void testLoginUser() throws Exception {
-        when(userService.loginUser(user.getUserName(), rawPassword)).thenReturn(Optional.of(user));
+    public void testLoginUser() throws Exception{
+        when(userService.loginUser(credentials)).thenReturn(Optional.of(user));
 
-        MvcResult result = mockMvc.perform(get("/user/login/" + user.getUserName() + "/" + rawPassword)
-                .contentType(MediaType.APPLICATION_JSON)).andReturn();
+        MvcResult result = mockMvc.perform(post("/user/login")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(new ObjectMapper().writeValueAsString(rawUser))).andReturn();
 
-        var actualUser = new ObjectMapper().readValue(
-                result.getResponse().getContentAsString(), new TypeReference<User>() {
-                });
+        var actualUser = new ObjectMapper().readValue(result.getResponse()
+                .getContentAsString(), new TypeReference<User>() {
+        });
 
+        assertThat(result.getResponse().getStatus()).isEqualTo(HttpStatus.OK.value());
         assertThat(actualUser).isEqualTo(user);
     }
 
     @Test
     public void testLoginUserFails() throws Exception {
-        when(userService.loginUser(null, null)).thenReturn(Optional.empty());
+        when(userService.loginUser(null)).thenReturn(Optional.empty());
 
-        MvcResult result = mockMvc.perform(get("/user/login/null/null")
-                .contentType(MediaType.APPLICATION_JSON)).andReturn();
-
+        MvcResult result = mockMvc.perform(post("/user/login")
+                .contentType(MediaType.APPLICATION_JSON)
+                .contentType(new ObjectMapper().writeValueAsString(invalidUser))).andReturn();
         var actualUser = result.getResponse().getContentAsString();
 
-        assertThat(actualUser).isEmpty();
+        assertThat(actualUser).isEqualTo("");
     }
 }
