@@ -62,16 +62,38 @@ import axios from 'axios'
                 this.clearForm()
                 this.$store.dispatch("loginUser", user)
                 this.$swal.fire({
-                    title:"Connexion avec succès!",
-                    icon:"success"})
+                    title: "Bravo!",
+                    text: "Connexion avec succès!",
+                    icon: "success",
+                    confirmButtonColor: '#3085d6',
+                }).then( (result) => {
+                    if(result.isConfirmed)
+                        this.$router.push({ name: "User"})
+                })
             },
+            swal(alertTitle, alertText, alertIcon){
+                this.$swal.fire({
+                    title: alertTitle,
+                    text: alertText,
+                    icon: alertIcon,
+                })
+            }
+            ,
             loginUser(){
+                if(this.userName == "" || this.password == ""){
+                    this.swal("Erreur!", "Veuillez entrez votre Nom d'utilisateur et Mot de passe avant de vous connecter", "error")
+                    return
+                }
+
                 const credentials = {
                     userName : this.userName,
                     password : this.password
                 }
                 axios.post('http://localhost:9696/user/login/', credentials)
-                    .then(res => res.data.userName == this.userName ? this.loginSuccess(res) : alert("Connexion échouée"))
+                    .then(res => {res.data != null  && res.data.userName == this.userName ? this.loginSuccess(res) : this.swal("Erreur!","Connexion échouée", "error")})
+                    .catch( () =>{
+                        this.swal("Erreur!", "Connexion échouée", "error")}
+                    )
             }
         }
     }
