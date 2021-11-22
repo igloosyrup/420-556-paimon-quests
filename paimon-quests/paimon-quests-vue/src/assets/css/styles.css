@@ -6,7 +6,7 @@
     background-image: url('../form/scroll-form-background.png');
     background-repeat: no-repeat;
     background-position: top;
-    background-size: 100% 100%;
+    background-size: 100% 50%;
 }
 
 .paimon-bg{
@@ -14,9 +14,25 @@
     background-repeat: no-repeat;
     background-position: center;
     background-size: cover;
+    /* padding-bottom: 50vh; */
+    /* height: 100vh; */
 }
 
 .flip-img{
     -webkit-transform: scaleX(-1);
     transform: scaleX(-1);
+}
+
+.custom-height{
+    /* height: 100vh; */
+    padding-bottom: 50%;
+    /* margin-bottom: 20vh; */
+}
+
+.custom-font{
+    font-family: "Chistoso";
+}
+
+.custom-height{
+    height: 2500px;
 }
