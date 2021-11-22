@@ -1,6 +1,6 @@
 <template>
     <div class="container mb-3">
-        <div>
+        <div class="mt-5">
             <img :src="require(`@/assets/paimon/${PAIMON}`)" draggable="false" class="paimon mt-5">
 
 
@@ -24,6 +24,6 @@
 
 <style scoped>
     .paimon{
-        width: 200px
+        width: 500px
     }
 </style>
