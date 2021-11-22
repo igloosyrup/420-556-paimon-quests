@@ -2,7 +2,9 @@ package com.igloosyrup.paimonquests.controllers;
 
 import com.igloosyrup.paimonquests.models.Credentials;
 import com.igloosyrup.paimonquests.models.User;
+import com.igloosyrup.paimonquests.repositories.UserRepository;
 import com.igloosyrup.paimonquests.services.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpCookie;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,6 +17,10 @@ import org.springframework.web.bind.annotation.*;
 public class UserController {
 
     public UserService userService;
+
+    //TODO delete after testing
+    @Autowired
+    public UserRepository userRepository;
 
     public UserController(UserService userService){
         this.userService = userService;
@@ -36,5 +42,11 @@ public class UserController {
                 .orElse(ResponseEntity.status(HttpStatus.CONFLICT).build());
     }
 
-
+    //TODO delete after testing
+    @GetMapping("/{id}")
+    public ResponseEntity<User> someGetMethod(@PathVariable Integer id){
+        return userRepository.findById(id)
+                .map(user -> ResponseEntity.status(HttpStatus.OK).body(user))
+                .orElse(ResponseEntity.status(HttpStatus.CONFLICT).build());
+    }
 }
