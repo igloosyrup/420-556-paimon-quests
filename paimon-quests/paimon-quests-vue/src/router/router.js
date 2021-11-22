@@ -32,9 +32,12 @@ const router = new VueRouter({
 })
 
 router.beforeEach((to, from, next) => {
-  if (to.name !== 'Login' && to.name !== 'Home' && to.name !== 'About' && ( store.getters.currentUser == undefined ||
+  if (to.name !== 'Login' && to.name !== 'Home' && to.name !== 'About' && to.name !== 'Register' && ( store.getters.currentUser == undefined ||
       store.getters.currentUser == "")) 
         next({ name: 'Home' })
+  else if ((to.name == 'Login' || to.name == 'Register') && ( store.getters.currentUser != undefined && 
+      store.getters.currentUser != ""))
+        next({ name: 'Home'})
   else
     next()
 })
