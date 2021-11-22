@@ -1,5 +1,5 @@
 <template>
-    <div class="container-fluid py-5 paimon-bg">
+    <div class="container-fluid py-5 paimon-bg custom-height">
         <div class="container py-5 my-5">
             <div class="my-5">
                 <div class="form-bg py-5">
