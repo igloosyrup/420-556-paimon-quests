@@ -1,5 +1,5 @@
 <template>
-    <div class="container mb-5 mt-5 pb-5 px-5">
+    <div class="container mt-5 pb-5 px-5 custom-height">
         <div class="py-5 mt-5 mx-5">
             <div class="d-flex justify-content-center">
                 <div class="form mt-5">
@@ -8,9 +8,9 @@
                         Connectez-vous
                     </h1>
                     <!-- To remove this later -->
-                    <span >
+                    <!-- <span >
                         {{this.$store.state.user}}
-                    </span>
+                    </span> -->
                     <!-- end of to remove later -->
                 </div>
             </div>

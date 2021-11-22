@@ -1,5 +1,5 @@
 <template>
-    <div class="container mt-5 pb-5 px-5">
+    <div class="container mt-5 pb-5 px-5 custom-height">
         <div class="py-5 m-5">
             <div class="d-flex justify-content-center">
                 <div class="form mt-5">
@@ -88,7 +88,15 @@ import { Patterns } from '@/constants/patterns.js'
             },
             registerSuccess(){
                 this.clearForm()
-                alert("Inscription avec succès!")
+                this.$swal.fire({
+                    title: "Bravo!",
+                    text: "Compte créer avec succès!",
+                    icon: "success",
+                    confirmButtonColor: '#3085d6',
+                }).then( (result) => {
+                    if(result.isConfirmed)
+                        this.$router.push({ name: "Home"})
+                })
             },
             registerUser(){
                 this.$v.$touch()
