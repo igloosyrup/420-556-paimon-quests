@@ -59,12 +59,15 @@
                     confirmButtonText:'Oui',
                     cancelButtonText:'Non'
                 }).then((result) => {
-                    if(result.isConfirmed)
+                    if(result.isConfirmed){
                         this.$store.dispatch("logout")
                         this.swal("Bravo", "déconnexion avec succès!", "success")
                         if(this.$route.path === "/")
                             return
                         this.$router.push({ name: "Home"})
+                    }else{
+                        this.swal("Annulé", "déconnexion annulé.", "error")
+                    }
                 })
             }, 
             swal(alertTitle, alertText, alertIcon){

@@ -46,6 +46,8 @@
 import axios from 'axios'
 import { required, minLength, email, helpers } from 'vuelidate/lib/validators'
 import { Patterns } from '@/constants/patterns.js'
+import AxiosServices from '@/api/Axios.js'
+
     const passwordValid = helpers.regex("passwordValid", Patterns.passwordPattern())
     const usernameValid = helpers.regex("usernameValid", Patterns.usernamePattern())
     export default {
@@ -105,10 +107,29 @@ import { Patterns } from '@/constants/patterns.js'
                 }else{
                     const user = { userName : this.userName, password : this.password, email : this.email}
                     console.log(user)
-                    axios.post('http://localhost:9696/user/register', user)
-                        .then(res => res.data.userName == user.userName ? this.registerSuccess() : alert(res.data))
-                        .catch(err => console.log(err))
+                    axios.get(`${AxiosServices.getBaseUrl()}/user/token`)
+                    .then(
+                        this.testingMethod(user)
+                    )
                 }
+            },
+            testingMethod(user){
+                let token = AxiosServices.getCsrfToken() 
+                token = `${this.$cookies.get('XSRF-TOKEN')}`
+                
+                const config = {
+                    headers: {
+                        'content-type': 'application/json',
+                        'X-XSRF-TOKEN': token
+                    },
+                    withCredentials: true
+                }
+                axios.post('http://localhost:9696/user/register', user
+                , config
+                )
+                    .then(res => res.data.userName == user.userName ? this.registerSuccess() : alert(res))
+                    .catch(err => console.log(err))
+                // paimonHunter1!
             }
         },
     }

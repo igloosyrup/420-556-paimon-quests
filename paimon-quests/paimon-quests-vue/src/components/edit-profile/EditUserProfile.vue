@@ -1,5 +1,5 @@
 <template>
-    <div class="container mb-5 mt-5 pb-5 px-5">
+    <div class="container mb-5 mt-5 pb-5 px-5 custom-height">
         <div class="py-5 mt-5 mx-5">
             <div class="d-flex justify-content-center">
                 <div class="form mt-5">
@@ -36,16 +36,45 @@
 </template>
 
 <script>
+import { required, minLength, email, helpers } from 'vuelidate/lib/validators'
+import { Patterns } from '@/constants/patterns.js'
+    const passwordValid = helpers.regex("passwordValid", Patterns.passwordPattern())
+    const usernameValid = helpers.regex("usernameValid", Patterns.usernamePattern())
     export default {
         name: "EditUserProfile",
         created(){
             this.PAIMON = 'oh.png'
         },
+        data(){
+            return{
+                userName: "",
+                password: "",
+                email: "",
+                submitStatus: null,
+            }
+        },
         methods:{
             updateUser(){
                 console.log("Update User")
             }
-        }
+        },
+        validations:{
+            userName:{
+                required,
+                minLength: minLength(8),
+                usernameValid
+            },
+            password:{
+                required,
+                minLength: minLength(8),
+                passwordValid
+            },
+            email:{
+                required,
+                email,
+                minLength: minLength(6),
+            }
+        },
     }
 </script>
 

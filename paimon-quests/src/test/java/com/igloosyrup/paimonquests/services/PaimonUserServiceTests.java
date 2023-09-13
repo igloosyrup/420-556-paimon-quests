@@ -2,8 +2,8 @@ package com.igloosyrup.paimonquests.services;
 
 import com.igloosyrup.paimonquests.enums.PasswordEnum;
 import com.igloosyrup.paimonquests.models.Credentials;
-import com.igloosyrup.paimonquests.models.User;
-import com.igloosyrup.paimonquests.repositories.UserRepository;
+import com.igloosyrup.paimonquests.models.PaimonUser;
+import com.igloosyrup.paimonquests.repositories.PaimonUserRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -21,18 +21,18 @@ import java.util.Optional;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @ExtendWith(MockitoExtension.class)
-public class UserServiceTests {
+public class PaimonUserServiceTests {
 
     @Mock
-    private UserRepository userRepository;
+    private PaimonUserRepository paimonUserRepository;
 
     @InjectMocks
-    private UserService userService;
+    private PaimonUserService paimonUserService;
 
     private PasswordService passwordService;
     private Credentials credentials;
-    private User user;
-    private User invalidUser;
+    private PaimonUser user;
+    private PaimonUser invalidUser;
     private String rawPassword;
     private String encodedPassword;
 
@@ -46,13 +46,13 @@ public class UserServiceTests {
                 .password(rawPassword)
                 .build();
 
-        user = User.builder()
+        user = PaimonUser.builder()
                 .idUser(1)
                 .userName("toto")
                 .password(encodedPassword)
                 .email("toto@toto.toto")
                 .build();
-        invalidUser = User.builder()
+        invalidUser = PaimonUser.builder()
                 .idUser(2)
                 .userName("toto")
                 .password(encodedPassword)
@@ -62,31 +62,31 @@ public class UserServiceTests {
 
     @Test
     public void testRegisterUser(){
-        when(userRepository.save(user)).thenReturn(user);
-        Optional<User> actualUser = userService.registerUser(user);
+        when(paimonUserRepository.save(user)).thenReturn(user);
+        Optional<PaimonUser> actualUser = paimonUserService.registerUser(user);
         assertThat(actualUser.get()).isEqualTo(user);
         assertThat(actualUser.get().getIdUser()).isEqualTo(user.getIdUser());
     }
 
     @Test
     public void testRegisterUserFails(){
-        when(userRepository.save(invalidUser)).thenReturn(null);
-        Optional<User> actualUser = userService.registerUser(invalidUser);
+        when(paimonUserRepository.save(invalidUser)).thenReturn(null);
+        Optional<PaimonUser> actualUser = paimonUserService.registerUser(invalidUser);
         assertThat(actualUser).isEmpty();
     }
 
     @Test
     public void testLoginUser(){
-        when(userRepository.findUserByUserName(user.getUserName())).thenReturn(user);
-        Optional<User> actualUser = userService.loginUser(credentials);
+        when(paimonUserRepository.findPaimonUserByUserName(user.getUserName())).thenReturn(user);
+        Optional<PaimonUser> actualUser = paimonUserService.loginUser(credentials);
         assertThat(actualUser.get()).isEqualTo(user);
         assertThat(actualUser.get().getIdUser()).isEqualTo(user.getIdUser());
     }
 
     @Test
     public void testLoginUserFails(){
-        lenient().when(userRepository.findUserByUserName(null)).thenReturn(null);
-        Optional<User> actualUser = userService.loginUser(null);
+        lenient().when(paimonUserRepository.findPaimonUserByUserName(null)).thenReturn(null);
+        Optional<PaimonUser> actualUser = paimonUserService.loginUser(null);
         assertThat(actualUser).isEmpty();
     }
 

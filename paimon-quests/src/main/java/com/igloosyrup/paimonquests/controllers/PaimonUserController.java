@@ -1,33 +1,29 @@
 package com.igloosyrup.paimonquests.controllers;
 
 import com.igloosyrup.paimonquests.models.Credentials;
-import com.igloosyrup.paimonquests.models.User;
-import com.igloosyrup.paimonquests.repositories.UserRepository;
-import com.igloosyrup.paimonquests.services.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpCookie;
+import com.igloosyrup.paimonquests.models.PaimonUser;
+import com.igloosyrup.paimonquests.services.PaimonUserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Optional;
+
 @RestController
-@CrossOrigin(origins = "http://localhost:4000")
+//@EnableWebSecurity(debug = true)
+@CrossOrigin(origins = "http://localhost:4000", allowCredentials = "true")
 @RequestMapping("/user")
-public class UserController {
+public class PaimonUserController {
 
-    public UserService userService;
+    public PaimonUserService userService;
 
-    //TODO delete after testing
-    @Autowired
-    public UserRepository userRepository;
-
-    public UserController(UserService userService){
+    public PaimonUserController(PaimonUserService userService) {
         this.userService = userService;
     }
 
-    @PostMapping("/register")
-    public ResponseEntity<User> registerUser(@RequestBody User newUser){
+    @PostMapping(value = "/register")
+    public ResponseEntity<PaimonUser> registerUser(@RequestBody PaimonUser newUser) {
         System.out.println(newUser);
         return userService.registerUser(newUser)
                 .map(user1 -> ResponseEntity.status(HttpStatus.CREATED).body(user1))
@@ -35,18 +31,18 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<User> loginUser(@RequestBody Credentials credentials){
+    public ResponseEntity<PaimonUser> loginUser(@RequestBody Credentials credentials) {
         System.out.println(credentials);
         return userService.loginUser(credentials)
                 .map(user1 -> ResponseEntity.status(HttpStatus.OK).body(user1))
                 .orElse(ResponseEntity.status(HttpStatus.CONFLICT).build());
     }
 
-    //TODO delete after testing
-    @GetMapping("/{id}")
-    public ResponseEntity<User> someGetMethod(@PathVariable Integer id){
-        return userRepository.findById(id)
-                .map(user -> ResponseEntity.status(HttpStatus.OK).body(user))
+    @GetMapping("/token")
+    public ResponseEntity<Boolean> getToken() {
+        return Optional.of(Boolean.TRUE)
+                .map(aBoolean -> ResponseEntity.status(HttpStatus.OK).body(aBoolean))
                 .orElse(ResponseEntity.status(HttpStatus.CONFLICT).build());
     }
+
 }
